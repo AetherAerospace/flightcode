@@ -1,3 +1,8 @@
+/* 
+    Basic PID-Controller
+    Inspired by: https://github.com/br3ttb/Arduino-PID-Library
+*/
+
 class PID {
     public:
         PID(double*, double*, double*);

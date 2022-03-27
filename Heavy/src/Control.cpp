@@ -57,8 +57,12 @@ volatile bool mpuInterrupt = false;
 
 // PID init
 void initPID() {
-  // ( kP, kI, kD, relaxMin, relaxMax, changeDir )
   /*
+    ( kP, kI, kD, relaxMin, relaxMax, changeDir )
+    
+    relax is a feature to limit max PID output, not sure if 
+    we will need it yet. Be careful with kI value!
+
     !DIRECTION CHANGES CAN AND SHOULD ONLY HAPPEN HERE!
   */
   rollPID.set(0.9, 0, 0, 0, 0, false);
@@ -136,6 +140,7 @@ void loopControl(){
       double rawPitch = (ypr[1] * 180/M_PI);
       double rawRoll = (ypr[2] * 180/M_PI);
       // convert into servo readable value
+      // these are the vals which are passed to the PID-Loops
       InputPitch = map(rawPitch, -180.00, 180.00, 0.00, 180.00);
       InputRoll = map(rawRoll, -180.00, 180.00, 0.00, 180.00);
       // compute PID values based on servo vals

@@ -23,12 +23,21 @@ const int escPin2 = 23;
 void initESC() {
     ESC1.attach(escPin1,1000,2000);
     ESC2.attach(escPin2,1000,2000);
+    // give 2 seconds for initial powerup before we send any signals
     delay(2000);
+    // make sure we set both ESC's to zero
     ESC1.write(0);
     ESC2.write(0);
+    // again wait 2 seconds after first signal send just to be sure
     delay(2000);
 }
 
+/* 
+    Main Power Loop
+    For now this is just a normal loop up/down of power.
+    This can and will get more complex as we implement checks for
+    height and postitional values and of course normal startup procedure.
+*/
 void loopPower() {
     unsigned long currentMillis = millis();
     if(runLoop == true){
@@ -40,7 +49,7 @@ void loopPower() {
                     modifier = -0.5;
                 }
                 if (value < 0 && once == false) {
-                    modifier = 0; \
+                    modifier = 0;
                 }
                 value = value + modifier;
             }
