@@ -57,12 +57,12 @@ volatile bool mpuInterrupt = false;
 
 // PID init
 void initPID() {
-  // ( kP, kI, kD, changeDir )
+  // ( kP, kI, kD, relaxMin, relaxMax, changeDir )
   /*
     !DIRECTION CHANGES CAN AND SHOULD ONLY HAPPEN HERE!
   */
-  rollPID.set(0.9, 0, 0, false);
-  pitchPID.set(0.9, 0, 0, false);
+  rollPID.set(0.9, 0, 0, 0, 0, false);
+  pitchPID.set(0.9, 0, 0, 0, 0, false);
 }
 
 // Servo Init

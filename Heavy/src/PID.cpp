@@ -11,7 +11,7 @@ PID::PID(double* Input, double* Output, double* Setpoint) {
     lastTime = millis() - sampleTime;
 }
 
-void PID::set(double SkP, double SkI, double SkD, bool dirChange)
+void PID::set(double SkP, double SkI, double SkD, double SrelaxMin, double SrelaxMax, bool dirChange)
 {
    if (SkP<0 || SkI<0 || SkD<0) return;
    double sampleTimeInSec = (double)sampleTime/1000;
@@ -19,6 +19,10 @@ void PID::set(double SkP, double SkI, double SkD, bool dirChange)
    kP = SkP;
    kI = SkI * sampleTimeInSec;
    kD = SkD / sampleTimeInSec;
+   if ( SrelaxMin != 0 && SrelaxMin != 0 ) {
+       relaxMin = SrelaxMin;
+       relaxMax = SrelaxMax;
+   }
 }
 
 bool PID::computePID() {
@@ -32,6 +36,8 @@ bool PID::computePID() {
         outputSum += (kI * error);
         output = (kP * error);
         output += outputSum - (kD * diffInput);
+        if (output > relaxMax) output = relaxMax;
+        if (output < relaxMin) output = relaxMin;
         if (isReversed == true) {
             *pidOutput = output*(-1) + *pidSetpoint;
         } else {
