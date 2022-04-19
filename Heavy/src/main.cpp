@@ -2,18 +2,20 @@
 #include <SPI.h>
 #include <LoRa.h>
 #include <Wire.h>
+#include "util/Comms.h"
+#include "util/Logs.h"
+#include "util/Serial.h"
+#include "Baro.h"
 #include "Control.h"
 #include "Power.h"
-#include "Comms.h"
-#include "Logs.h"
-#include "Baro.h"
 
 void setup() {
-  Serial.begin(115200);
+  initSerial();
   initServo();
   initMPU();
   initPID();
   initESC();
+  srlInitFin();
 }
 
 void loop() {

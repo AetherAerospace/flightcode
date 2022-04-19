@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <Adafruit_BMP280.h>
-#include "Logs.h"
+#include "util/Logs.h"
 
 Adafruit_BMP280 bmp;
 

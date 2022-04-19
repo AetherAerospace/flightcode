@@ -2,19 +2,11 @@
 #include <SPI.h>
 #include <LoRa.h>
 #include <Wire.h>
-#include "Comms.h"
+#include "util/Comms.h"
+#include "util/Logs.h"
+#include "pins/loraPins.h"
 #include "Control.h"
 #include "Power.h"
-#include "Logs.h"
-
-// LoRa Pins
-#define BAND 866E6
-#define SCK 5
-#define MISO 19
-#define MOSI 27
-#define SS 18
-#define RST 23
-#define DIO0 26
 
 // other vars
 String LoRaData;

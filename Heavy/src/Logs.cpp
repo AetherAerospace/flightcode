@@ -1,7 +1,7 @@
 #include <Arduino.h>
-#include "SdFat.h"
+#include <SdFat.h>
 #include <SPI.h>
-#include "Comms.h"
+#include "util/Comms.h"
 
 //SdFat SD;
 #if SPI_DRIVER_SELECT == 2

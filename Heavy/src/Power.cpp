@@ -1,28 +1,30 @@
 #include <Arduino.h>
 #include <ESP32Servo.h>
+#include "pins/escPins.h"
+#include "util/Serial.h"
+#include "Power.h"
+
 
 // ESCs
 Servo ESC1;
 Servo ESC2;
 
-// vars
+// bools
+bool runLoop = true;
+bool once = true;
 bool holdEngine = false;
 bool killed = false;
-bool runLoop = false;
-bool once = true;
+
+// other vars
 long previousMillis = 0;
 long interval = 50;   
 float modifier = 0.5;
 float value = 0;
 
-// pins
-const int escPin1 = 12;
-const int escPin2 = 23;
-
 // ESC Init
 void initESC() {
-    ESC1.attach(escPin1,1000,2000);
-    ESC2.attach(escPin2,1000,2000);
+    ESC1.attach(ESC_PIN_1, 1000, 2000);
+    ESC2.attach(ESC_PIN_2, 1000, 2000);
     // give 2 seconds for initial powerup before we send any signals
     delay(2000);
     // make sure we set both ESC's to zero
@@ -53,6 +55,7 @@ void loopPower() {
                 }
                 value = value + modifier;
             }
+            srlPower(String(value), 0);
             ESC1.write(value);
             ESC2.write(value);
         }

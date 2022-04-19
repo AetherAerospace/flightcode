@@ -1,19 +1,15 @@
 #include <Arduino.h>
 #include <ESP32Servo.h>
 #include <Wire.h>
-#include "MPU6050_6Axis_MotionApps20.h"
-#include "Comms.h"
-#include "PID.h"
-#include "Logs.h"
+#include <MPU6050_6Axis_MotionApps20.h>
+#include "util/Comms.h"
+#include "proc/PID.h"
+#include "util/Logs.h"
+#include "pins/servoPins.h"
+#include "util/Serial.h"
 #include "Control.h"
 
-// Pins
-const int servoPinRoll1 = 25;
-const int servoPinRoll2 = 15;
-const int servoPinPitch1 = 4;
-const int servoPinPitch2 = 2;
-
-// Servo
+// Servos
 Servo servoRoll1;
 Servo servoRoll2;
 Servo servoPitch1;
@@ -72,13 +68,13 @@ void initPID() {
 // Servo Init
 void initServo() {
   servoPitch1.setPeriodHertz(300);
-  servoPitch1.attach(servoPinPitch1, 0, 2500);
+  servoPitch1.attach(SERVO_PIN_1, 0, 2500);
   servoPitch2.setPeriodHertz(300);
-  servoPitch2.attach(servoPinPitch2, 0, 2500);
+  servoPitch2.attach(SERVO_PIN_2, 0, 2500);
   servoRoll1.setPeriodHertz(300);
-  servoRoll1.attach(servoPinRoll1, 0, 2500);
+  servoRoll1.attach(SERVO_PIN_3, 0, 2500);
   servoRoll2.setPeriodHertz(300);
-  servoRoll2.attach(servoPinRoll2, 0, 2500);
+  servoRoll2.attach(SERVO_PIN_4, 0, 2500);
 }
 
 // MPU init
@@ -146,6 +142,7 @@ void loopControl(){
       // compute PID values based on servo vals
       rollPID.computePID();
       pitchPID.computePID();
+      srlGyro(String(OutputRoll), String(OutputPitch), 0);
       // apply to servos
       if (OutputRoll <= limitRollMax && OutputRoll >= limitRollMin) {
         servoRoll1.write(OutputRoll);
