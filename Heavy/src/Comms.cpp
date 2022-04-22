@@ -5,6 +5,7 @@
 #include "util/Comms.h"
 #include "util/Logs.h"
 #include "pins/loraPins.h"
+#include "util/Serial.h"
 #include "Control.h"
 #include "Power.h"
 
@@ -12,7 +13,6 @@
 String LoRaData;
 long prevMillis = 0;
 long intvl = 1000;
-bool killedComs = false;
 String dataReceived; 
 
 void handleReceivedLora(){
@@ -25,7 +25,6 @@ void handleReceivedLora(){
     }else if (dataReceived == "ENGINE HOLD"){
         toggleESCHold();
     }else if (dataReceived == "ENGINE KILL"){
-        Serial.println("kill triggered");
         killPower();
     }else if (dataReceived == "ENGINE ON"){
         return;
@@ -38,7 +37,7 @@ void initLora(){
     SPI.begin(SCK, MISO, MOSI, SS);
     LoRa.setPins(SS, RST, DIO0);
     if (!LoRa.begin(BAND)) {
-        Serial.println("wasnt able to start lora");
+        srlError("Unable to start LoRa!");
         while (1);
     }
 }
@@ -51,7 +50,7 @@ void sendLora(String messageToSend){
         LoRa.beginPacket();
         LoRa.print(messageToSend);
         LoRa.endPacket();
-        Serial.println(messageToSend);
+        srlInfo(String(messageToSend));
     }
 }
 
@@ -60,7 +59,7 @@ String readLora(){
     if (packetSize){
         while(LoRa.available()){
             LoRaData = LoRa.readString();
-            Serial.print(LoRaData);
+            srlInfo(String(LoRaData));
         }
     }
     return LoRaData;

@@ -3,5 +3,7 @@
 
 void initSerial();
 void srlInitFin();
-void srlPower(String powerOutput, int logInterval);
-void srlGyro(String roll, String pitch, int logInterval);
+void srlPower(String powerOutput);
+void srlGyro(String roll, String pitch);
+void srlError(String errorMsg);
+void srlInfo(String infoMsg);

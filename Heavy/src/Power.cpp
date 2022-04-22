@@ -55,7 +55,7 @@ void loopPower() {
                 }
                 value = value + modifier;
             }
-            srlPower(String(value), 0);
+            srlPower(String(value));
             ESC1.write(value);
             ESC2.write(value);
         }
@@ -74,13 +74,11 @@ void toggleESCHold(){
 // terminate ESCs
 void killPower() {
     if(killed == false){
-        Serial.println("recv kill");
         runLoop = false;
         ESC1.write(0);
         ESC2.write(0);
-        Serial.println(ESC1.read());
-        Serial.println(ESC2.read());
+        srlPower(String(ESC1.read()));
+        srlPower(String(ESC2.read()));
         killed = true;
-        Serial.println("kill exec success");
     }
 }

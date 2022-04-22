@@ -125,8 +125,8 @@ void loopControl(){
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+    srlInfo("Collecting Yaw Samples...");
     if (sampleCount <= 300) {
-      Serial.print("_");
       correct = ypr[0];
       sampleCount++;
     } else {
@@ -142,7 +142,7 @@ void loopControl(){
       // compute PID values based on servo vals
       rollPID.computePID();
       pitchPID.computePID();
-      srlGyro(String(OutputRoll), String(OutputPitch), 0);
+      srlGyro(String(OutputRoll), String(OutputPitch));
       // apply to servos
       if (OutputRoll <= limitRollMax && OutputRoll >= limitRollMin) {
         servoRoll1.write(OutputRoll);

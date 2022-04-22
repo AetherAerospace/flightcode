@@ -16,14 +16,26 @@ void srlInitFin() {
     Serial.println(END_SEPERATOR);
 }
 
-void srlGyro(String roll, String pitch, int logInterval) {
-    Serial.println("> Gyro Log");
-    Serial.println(">Roll: " + String(roll) + "Pitch: " + String(pitch));
+void srlGyro(String roll, String pitch) {
+    Serial.println("> Gyro Log:");
+    Serial.println("> Roll: " + roll + "Pitch: " + pitch);
     Serial.println(END_SEPERATOR);
 }
 
-void srlPower(String powerOutput, int logInterval) {
-    Serial.println("> Power Log");
-    Serial.println(">Output Power Level: " + String(powerOutput));
+void srlPower(String powerOutput) {
+    Serial.println("> Power Log:");
+    Serial.println("> Output Power Level: " + powerOutput);
+    Serial.println(END_SEPERATOR);
+}
+
+void srlError(String errorMsg) {
+    Serial.println("> Error Report:");
+    Serial.println(">" + errorMsg);
+    Serial.println(END_SEPERATOR);
+}
+
+void srlInfo(String infoMsg) {
+    Serial.println("> Info:");
+    Serial.println(">" + infoMsg);
     Serial.println(END_SEPERATOR);
 }
