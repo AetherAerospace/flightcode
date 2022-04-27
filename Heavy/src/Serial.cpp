@@ -1,6 +1,11 @@
 #include <Arduino.h>
 #include "util/Serial.h"
 
+// for delays
+unsigned long gyroPrevMillis = 0;
+unsigned long baroPrevMillis = 0;
+unsigned long powerPrevMillis = 0;
+
 void initSerial() {
     Serial.begin(115200);
     // chill for two seconds so user can open serial console
@@ -17,21 +22,33 @@ void srlInitFin() {
 }
 
 void srlGyro(String roll, String pitch) {
-    Serial.println("> Gyro Log:");
-    Serial.println("> Roll: " + roll + "Pitch: " + pitch);
-    Serial.println(END_SEPERATOR);
+    unsigned long gyroMillis = millis();
+    if (gyroMillis - gyroPrevMillis > GYRO_LOG_INTERVAL) {
+        gyroPrevMillis = gyroMillis;
+        Serial.println("> Gyro Log:");
+        Serial.println("> Roll: " + roll + "Pitch: " + pitch);
+        Serial.println(END_SEPERATOR);
+    }
 }
 
 void srlBaro(String prs, String alt) {
-    Serial.println("> Baro Log:");
-    Serial.println("> Pressure: " + prs + "Altitude: " + alt);
-    Serial.println(END_SEPERATOR);
+    unsigned long baroMillis = millis();
+    if (baroMillis - baroPrevMillis > BARO_LOG_INTERVAL) {
+        baroPrevMillis = baroMillis;
+        Serial.println("> Baro Log:");
+        Serial.println("> Pressure: " + prs + "Altitude: " + alt);
+        Serial.println(END_SEPERATOR);
+    }
 }
 
 void srlPower(String powerOutput) {
-    Serial.println("> Power Log:");
-    Serial.println("> Output Power Level: " + powerOutput);
-    Serial.println(END_SEPERATOR);
+    unsigned long powerMillis = millis();
+    if (powerMillis - powerPrevMillis > POWER_LOG_INTERVAL) {
+        powerPrevMillis = powerMillis;
+        Serial.println("> Power Log:");
+        Serial.println("> Output Power Level: " + powerOutput);
+        Serial.println(END_SEPERATOR);
+    }
 }
 
 void srlError(String errorMsg) {

@@ -34,16 +34,11 @@ bool dmpReady = false;
 uint8_t mpuIntStatus;
 uint8_t devStatus;
 uint16_t packetSize;
-uint16_t fifoCount;
 uint8_t fifoBuffer[64];
 Quaternion q;
-VectorInt16 aa;
-VectorInt16 aaReal;
-VectorInt16 aaWorld;
 VectorFloat gravity;
 float euler[3];
 float ypr[3];
-uint8_t teapotPacket[14] = { '$', 0x02, 0,0, 0,0, 0,0, 0,0, 0x00, 0x00, '\r', '\n' };
 volatile bool mpuInterrupt = false;
 
 // PID init
@@ -65,14 +60,10 @@ void initPID() {
 
 // Servo Init
 void initServo() {
-  servoPitch1.setPeriodHertz(300);
-  servoPitch1.attach(SERVO_PIN_1, 0, 2500);
-  servoPitch2.setPeriodHertz(300);
-  servoPitch2.attach(SERVO_PIN_2, 0, 2500);
-  servoRoll1.setPeriodHertz(300);
-  servoRoll1.attach(SERVO_PIN_3, 0, 2500);
-  servoRoll2.setPeriodHertz(300);
-  servoRoll2.attach(SERVO_PIN_4, 0, 2500);
+  servoPitch1.attach(SERVO_PIN_PITCH_1, 0, 2500);
+  servoPitch2.attach(SERVO_PIN_PITCH_2, 0, 2500);
+  servoRoll1.attach(SERVO_PIN_ROLL_1, 0, 2500);
+  servoRoll2.attach(SERVO_PIN_ROLL_2, 0, 2500);
 }
 
 // MPU init
@@ -86,6 +77,8 @@ void initMPU() {
   pinMode(INTERRUPT_PIN, INPUT);
   delay(1000);
   devStatus = mpu.dmpInitialize();
+  // still offsets we took from the base lib, can be tuned
+  // but they seem just fine for now
   mpu.setXGyroOffset(220);
   mpu.setYGyroOffset(76);
   mpu.setZGyroOffset(-85);
