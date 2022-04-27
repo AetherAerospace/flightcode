@@ -44,13 +44,18 @@ bool PID::computePID() {
         output = (kP * error);
         output += outputSum - (kD * diffInput);
         if ( relaxMin != 0 && relaxMax != 0 ) {
-            if (output > relaxMax) output = relaxMax;
-            if (output < relaxMin) output = relaxMin;
-        }
-        if (isReversed == true) {
-            *pidOutput = output*(-1) + *pidSetpoint;
+            if ( (output + *pidSetpoint) > relaxMax) {
+                *pidOutput = relaxMax;
+            } else if ( (output + *pidSetpoint) < relaxMin) {
+                *pidOutput = relaxMin;
+            } else {
+                *pidOutput = output + *pidSetpoint;
+            }
         } else {
             *pidOutput = output + *pidSetpoint;
+        }
+        if (isReversed) {
+            *pidOutput = *pidOutput*(-1);
         }
         lastInput = input;
         lastTime = now;

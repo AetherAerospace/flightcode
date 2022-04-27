@@ -11,8 +11,8 @@
 
 // other vars
 String LoRaData;
-long prevMillis = 0;
-long intvl = 1000;
+int comInt = 1000;
+unsigned long comPrevMillis = 0;
 String dataReceived; 
 
 void handleReceivedLora(){
@@ -43,10 +43,10 @@ void initLora(){
 }
 
 void sendLora(String messageToSend){
-    unsigned long currMillis = millis();
+    unsigned long comMillis = millis();
     
-    if(currMillis - prevMillis > intvl) {
-        prevMillis = currMillis;
+    if(comMillis - comPrevMillis > comInt) {
+        comPrevMillis = comMillis;
         LoRa.beginPacket();
         LoRa.print(messageToSend);
         LoRa.endPacket();

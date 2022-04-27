@@ -15,12 +15,6 @@ Servo servoRoll2;
 Servo servoPitch1;
 Servo servoPitch2;
 
-// Axis Limiters
-const int limitRollMin = 70;
-const int limitRollMax = 110;
-const int limitPitchMin = 70;
-const int limitPitchMax = 110;
-
 // PID
 double Setpoint = 90;
 double InputPitch, OutputPitch;
@@ -34,6 +28,7 @@ MPU6050 mpu;
 #define INTERRUPT_PIN 3
 int sampleCount;
 bool controlReady = false;
+bool initialInit = true;
 float correct;
 bool dmpReady = false;
 uint8_t mpuIntStatus;
@@ -55,15 +50,17 @@ volatile bool mpuInterrupt = false;
 void initPID() {
   /*
     ( kP, kI, kD, relaxMin, relaxMax, changeDir )
-    
-    relax is a feature to limit max PID output, not sure if 
-    we will need it yet. Be careful with kI value!
 
-    !DIRECTION CHANGES RELATED TO THE GENERAL PID-LOOP
-    CAN AND SHOULD ONLY HAPPEN HERE!
+    relax is used for limiting PID-Output, we use it as
+    general axis limiters, moved here because we do the
+    processing anyway...
+
+    ! DIRECTION CHANGES/LIMITS RELATED TO THE GENERAL 
+    PID-LOOP CAN AND SHOULD ONLY HAPPEN HERE !
+  
   */
-  rollPID.set(0.9, 0, 0, 0, 0, false);
-  pitchPID.set(0.9, 0, 0, 0, 0, false);
+  rollPID.set(0.9, 0, 0, 70.00, 110.00, false);
+  pitchPID.set(0.9, 0, 0, 70.00, 110.00, false);
 }
 
 // Servo Init
@@ -126,7 +123,8 @@ void loopControl(){
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-    srlInfo("Collecting Yaw Samples...");
+    if (initialInit) srlInfo("Collecting Yaw Samples...");
+    initialInit = false;
     if (sampleCount <= 300) {
       correct = ypr[0];
       sampleCount++;
@@ -147,16 +145,10 @@ void loopControl(){
       // we invert values for the opposing servo because thats how our
       // TVC System works, we don't recalc PID values for each servo
       // because that saves some processing power
-      if (OutputRoll <= limitRollMax && OutputRoll >= limitRollMin) {
-        servoRoll1.write(OutputRoll);
-        // invert for one servo
-        servoRoll2.write(map(OutputRoll, 180, 0, 0, 180));
-      }
-      if (OutputPitch <= limitPitchMax && OutputPitch >= limitPitchMin) {
-        servoPitch1.write(OutputPitch);
-        // same as above, invert for one servo
-        servoPitch2.write(map(OutputPitch, 180, 0, 0, 180));
-      }
+      servoRoll1.write(OutputRoll);
+      servoRoll2.write(map(OutputRoll, 180, 0, 0, 180));
+      servoPitch1.write(OutputPitch);
+      servoPitch2.write(map(OutputPitch, 180, 0, 0, 180));
     }
   }
 }

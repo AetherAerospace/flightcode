@@ -22,6 +22,12 @@ void srlGyro(String roll, String pitch) {
     Serial.println(END_SEPERATOR);
 }
 
+void srlBaro(String prs, String alt) {
+    Serial.println("> Baro Log:");
+    Serial.println("> Pressure: " + prs + "Altitude: " + alt);
+    Serial.println(END_SEPERATOR);
+}
+
 void srlPower(String powerOutput) {
     Serial.println("> Power Log:");
     Serial.println("> Output Power Level: " + powerOutput);
