@@ -59,7 +59,8 @@ void initPID() {
     relax is a feature to limit max PID output, not sure if 
     we will need it yet. Be careful with kI value!
 
-    !DIRECTION CHANGES CAN AND SHOULD ONLY HAPPEN HERE!
+    !DIRECTION CHANGES RELATED TO THE GENERAL PID-LOOP
+    CAN AND SHOULD ONLY HAPPEN HERE!
   */
   rollPID.set(0.9, 0, 0, 0, 0, false);
   pitchPID.set(0.9, 0, 0, 0, 0, false);
@@ -143,13 +144,17 @@ void loopControl(){
       rollPID.computePID();
       pitchPID.computePID();
       srlGyro(String(OutputRoll), String(OutputPitch));
-      // apply to servos
+      // we invert values for the opposing servo because thats how our
+      // TVC System works, we don't recalc PID values for each servo
+      // because that saves some processing power
       if (OutputRoll <= limitRollMax && OutputRoll >= limitRollMin) {
         servoRoll1.write(OutputRoll);
+        // invert for one servo
         servoRoll2.write(map(OutputRoll, 180, 0, 0, 180));
       }
       if (OutputPitch <= limitPitchMax && OutputPitch >= limitPitchMin) {
         servoPitch1.write(OutputPitch);
+        // same as above, invert for one servo
         servoPitch2.write(map(OutputPitch, 180, 0, 0, 180));
       }
     }
