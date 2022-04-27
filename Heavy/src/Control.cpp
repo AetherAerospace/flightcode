@@ -146,11 +146,11 @@ void loopControl(){
       // apply to servos
       if (OutputRoll <= limitRollMax && OutputRoll >= limitRollMin) {
         servoRoll1.write(OutputRoll);
-        servoRoll2.write(OutputRoll);
+        servoRoll2.write(map(OutputRoll, 180, 0, 0, 180));
       }
       if (OutputPitch <= limitPitchMax && OutputPitch >= limitPitchMin) {
         servoPitch1.write(OutputPitch);
-        servoPitch2.write(OutputPitch);
+        servoPitch2.write(map(OutputPitch, 180, 0, 0, 180));
       }
     }
   }
