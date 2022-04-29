@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "util/Serial.h"
+#include "settings/serialSet.h"
 
 // for delays
 unsigned long gyroPrevMillis = 0;
@@ -24,7 +25,7 @@ void srlInitFin() {
 
 void srlGyro(String roll, String pitch) {
     unsigned long gyroMillis = millis();
-    if (gyroMillis - gyroPrevMillis > GYRO_LOG_INTERVAL) {
+    if (gyroMillis - gyroPrevMillis > GYRO_LOG_INTERVAL && GYRO_LOG_INTERVAL != -1) {
         gyroPrevMillis = gyroMillis;
         Serial.println("> Gyro Log:");
         Serial.println("> Roll: " + roll + " Pitch: " + pitch);
@@ -34,7 +35,7 @@ void srlGyro(String roll, String pitch) {
 
 void srlBaro(String prs, String alt) {
     unsigned long baroMillis = millis();
-    if (baroMillis - baroPrevMillis > BARO_LOG_INTERVAL) {
+    if (baroMillis - baroPrevMillis > BARO_LOG_INTERVAL && BARO_LOG_INTERVAL != -1) {
         baroPrevMillis = baroMillis;
         Serial.println("> Baro Log:");
         Serial.println("> Pressure: " + prs + " Altitude: " + alt);
@@ -44,7 +45,7 @@ void srlBaro(String prs, String alt) {
 
 void srlPower(String powerOutput) {
     unsigned long powerMillis = millis();
-    if (powerMillis - powerPrevMillis > POWER_LOG_INTERVAL) {
+    if (powerMillis - powerPrevMillis > POWER_LOG_INTERVAL && POWER_LOG_INTERVAL != -1) {
         powerPrevMillis = powerMillis;
         Serial.println("> Power Log:");
         Serial.println("> Output Power Level: " + powerOutput);

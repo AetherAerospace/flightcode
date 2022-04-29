@@ -1,9 +1,8 @@
 #include <Arduino.h>
 #include <ESP32Servo.h>
+#include "main/Power.h"
 #include "pins/escPins.h"
 #include "util/Serial.h"
-#include "Power.h"
-
 
 // ESCs
 Servo ESC1;

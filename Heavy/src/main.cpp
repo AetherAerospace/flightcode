@@ -2,12 +2,12 @@
 #include <SPI.h>
 #include <LoRa.h>
 #include <Wire.h>
+#include "main/Baro.h"
+#include "main/Control.h"
+#include "main/Power.h"
 #include "util/Comms.h"
 #include "util/Logs.h"
 #include "util/Serial.h"
-#include "Baro.h"
-#include "Control.h"
-#include "Power.h"
 
 void setup() {
   initSerial();

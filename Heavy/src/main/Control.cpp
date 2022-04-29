@@ -2,12 +2,14 @@
 #include <ESP32Servo.h>
 #include <Wire.h>
 #include <MPU6050_6Axis_MotionApps20.h>
-#include "util/Comms.h"
+#include "main/Control.h"
 #include "proc/PID.h"
+#include "util/Comms.h"
 #include "util/Logs.h"
 #include "pins/servoPins.h"
 #include "util/Serial.h"
-#include "Control.h"
+#include "settings/pidSet.h"
+#include "settings/mpuSet.h"
 
 // Servos
 Servo servoRoll1;
@@ -16,7 +18,7 @@ Servo servoPitch1;
 Servo servoPitch2;
 
 // PID
-double Setpoint = 90;
+double Setpoint = PID_SETPOINT;
 double InputPitch, OutputPitch;
 double InputRoll, OutputRoll;
 PID rollPID(&InputRoll, &OutputRoll, &Setpoint);
@@ -24,8 +26,6 @@ PID pitchPID(&InputPitch, &OutputPitch, &Setpoint);
 
 // MPU
 MPU6050 mpu;
-#define OUTPUT_READABLE_YAWPITCHROLL
-#define INTERRUPT_PIN 3
 int sampleCount;
 bool controlReady = false;
 bool initialInit = true;
@@ -43,19 +43,13 @@ volatile bool mpuInterrupt = false;
 
 // PID init
 void initPID() {
-  /*
-    ( kP, kI, kD, relaxMin, relaxMax, changeDir )
-
-    relax is used for limiting PID-Output, we use it as
-    general axis limiters, moved here because we do the
-    processing anyway...
-
-    ! DIRECTION CHANGES/LIMITS RELATED TO THE GENERAL 
-    PID-LOOP CAN AND SHOULD ONLY HAPPEN HERE !
-  
-  */
-  rollPID.set(0.9, 0, 0, 70.00, 110.00, false);
-  pitchPID.set(0.9, 0, 0, 70.00, 110.00, false);
+  //( kP, kI, kD, relaxMin, relaxMax, changeDir )
+  rollPID.set(PID_P, PID_I, PID_D, 
+              PID_RELAX_ROLL_MIN, 
+              PID_RELAX_ROLL_MAX, PID_INVERT);
+  pitchPID.set( PID_P, PID_I, PID_D, 
+                PID_RELAX_PITCH_MIN, 
+                PID_RELAX_PITCH_MAX, PID_INVERT);
   srlInfo("PID initialized!");
 }
 
@@ -74,10 +68,10 @@ void dmpDataReady() {
 }
 void initMPU() {
   Wire.begin();
-  Wire.setClock(400000);
+  Wire.setClock(I2C_CLOCKRATE);
   mpu.initialize();
   if(mpu.getDeviceID() == 0) {
-    srlError("MPU deviceID is zero => not found/connected!");
+    srlError("MPU not found!");
     while (1) delay(10);
   };
   srlInfo("MPU found!");
