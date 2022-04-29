@@ -25,6 +25,7 @@ float value = 0;
 void initESC() {
     ESC1.attach(ESC_PIN_1, 1000, 2000);
     ESC2.attach(ESC_PIN_2, 1000, 2000);
+    srlInfo("ESC's initialized!");
     // give 2 seconds for initial powerup before we send any signals
     delay(2000);
     // make sure we set both ESC's to zero

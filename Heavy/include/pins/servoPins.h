@@ -1,5 +1,5 @@
 // pins
-#define SERVO_PIN_PITCH_1 18
-#define SERVO_PIN_PITCH_2 19
-#define SERVO_PIN_ROLL_1 16
-#define SERVO_PIN_ROLL_2 17
+#define SERVO_PIN_PITCH_1 12
+#define SERVO_PIN_PITCH_2 14
+#define SERVO_PIN_ROLL_1 13
+#define SERVO_PIN_ROLL_2 15

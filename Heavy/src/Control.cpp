@@ -56,6 +56,7 @@ void initPID() {
   */
   rollPID.set(0.9, 0, 0, 70.00, 110.00, false);
   pitchPID.set(0.9, 0, 0, 70.00, 110.00, false);
+  srlInfo("PID initialized!");
 }
 
 // Servo Init
@@ -64,6 +65,7 @@ void initServo() {
   servoPitch2.attach(SERVO_PIN_PITCH_2, 0, 2500);
   servoRoll1.attach(SERVO_PIN_ROLL_1, 0, 2500);
   servoRoll2.attach(SERVO_PIN_ROLL_2, 0, 2500);
+  srlInfo("Servo's initialized!");
 }
 
 // MPU init
@@ -74,8 +76,14 @@ void initMPU() {
   Wire.begin();
   Wire.setClock(400000);
   mpu.initialize();
+  if(mpu.getDeviceID() == 0) {
+    srlError("MPU deviceID is zero => not found/connected!");
+    while (1) delay(10);
+  };
+  srlInfo("MPU found!");
   pinMode(INTERRUPT_PIN, INPUT);
   delay(1000);
+  srlInfo("MPU Initialization started!");
   devStatus = mpu.dmpInitialize();
   // still offsets we took from the base lib, can be tuned
   // but they seem just fine for now
@@ -86,13 +94,13 @@ void initMPU() {
   if (devStatus == 0) {
     mpu.CalibrateAccel(6);
     mpu.CalibrateGyro(6);
-    mpu.PrintActiveOffsets();
     mpu.setDMPEnabled(true);
     attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
     mpuIntStatus = mpu.getIntStatus();
     dmpReady = true;
     packetSize = mpu.dmpGetFIFOPacketSize();
   }
+  srlInfo("MPU initialized!");
 }
 
 // status check

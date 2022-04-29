@@ -17,6 +17,7 @@ void initBaro(){
         srlError("BMP280 not found!");
         while (1) delay(10);
     }
+    srlInfo("BMP found!");
     bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
                   Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
                   Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */

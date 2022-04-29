@@ -11,9 +11,9 @@
 
 void setup() {
   initSerial();
-  initServo();
   initMPU();
   initPID();
+  initServo();
   initESC();
   srlInitFin();
 }

@@ -17,7 +17,8 @@ void initSerial() {
 }
 
 void srlInitFin() {
-    Serial.println("> Starting Main");
+    Serial.println("> Setup:");
+    Serial.println("> Initialization Sequence complete!");
     Serial.println(END_SEPERATOR);
 }
 
@@ -26,7 +27,7 @@ void srlGyro(String roll, String pitch) {
     if (gyroMillis - gyroPrevMillis > GYRO_LOG_INTERVAL) {
         gyroPrevMillis = gyroMillis;
         Serial.println("> Gyro Log:");
-        Serial.println("> Roll: " + roll + "Pitch: " + pitch);
+        Serial.println("> Roll: " + roll + " Pitch: " + pitch);
         Serial.println(END_SEPERATOR);
     }
 }
@@ -36,7 +37,7 @@ void srlBaro(String prs, String alt) {
     if (baroMillis - baroPrevMillis > BARO_LOG_INTERVAL) {
         baroPrevMillis = baroMillis;
         Serial.println("> Baro Log:");
-        Serial.println("> Pressure: " + prs + "Altitude: " + alt);
+        Serial.println("> Pressure: " + prs + " Altitude: " + alt);
         Serial.println(END_SEPERATOR);
     }
 }
@@ -53,12 +54,12 @@ void srlPower(String powerOutput) {
 
 void srlError(String errorMsg) {
     Serial.println("> Error Report:");
-    Serial.println(">" + errorMsg);
+    Serial.println("> " + errorMsg);
     Serial.println(END_SEPERATOR);
 }
 
 void srlInfo(String infoMsg) {
     Serial.println("> Info:");
-    Serial.println(">" + infoMsg);
+    Serial.println("> " + infoMsg);
     Serial.println(END_SEPERATOR);
 }
