@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <Adafruit_BMP280.h>
-#include "main/Baro.h"
+#include "Baro.h"
 #include "util/Logs.h"
 #include "util/Serial.h"
 

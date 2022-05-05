@@ -2,9 +2,9 @@
 #include <SPI.h>
 #include <LoRa.h>
 #include <Wire.h>
+#include "Comms.h"
 #include "main/Control.h"
 #include "main/Power.h"
-#include "util/Comms.h"
 #include "util/Logs.h"
 #include "pins/loraPins.h"
 #include "util/Serial.h"

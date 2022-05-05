@@ -13,5 +13,6 @@ class PID {
         double *pidOutput, *pidInput, *pidSetpoint;
         double outputSum, lastInput, relaxMin, relaxMax;
         bool isReversed;
+        bool isRelaxed;
         unsigned long lastTime, sampleTime;
 };

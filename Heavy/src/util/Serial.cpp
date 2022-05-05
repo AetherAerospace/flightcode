@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "util/Serial.h"
+#include "Serial.h"
 #include "settings/serialSet.h"
 
 // for delays

@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "proc/PID.h"
+#include "PID.h"
 
 /* 
     Basic PID-Controller
@@ -24,11 +24,12 @@ void PID::set(double SkP, double SkI, double SkD, double SrelaxMin, double Srela
    kP = SkP;
    kI = SkI * sampleTimeInSec;
    kD = SkD / sampleTimeInSec;
-   relaxMin = 0; 
-   relaxMax = 0;
    if ( SrelaxMin != 0 && SrelaxMin != 0 ) {
+       isRelaxed = true;
        relaxMin = SrelaxMin;
        relaxMax = SrelaxMax;
+   } else {
+       isRelaxed = false;
    }
 }
 
@@ -43,7 +44,7 @@ bool PID::computePID() {
         outputSum += (kI * error);
         output = (kP * error);
         output += outputSum - (kD * diffInput);
-        if ( relaxMin != 0 && relaxMax != 0 ) {
+        if (isRelaxed) {
             if ( (output + *pidSetpoint) > relaxMax) {
                 *pidOutput = relaxMax;
             } else if ( (output + *pidSetpoint) < relaxMin) {

@@ -2,7 +2,7 @@
 #include <ESP32Servo.h>
 #include <Wire.h>
 #include <MPU6050_6Axis_MotionApps20.h>
-#include "main/Control.h"
+#include "Control.h"
 #include "proc/PID.h"
 #include "util/Comms.h"
 #include "util/Logs.h"

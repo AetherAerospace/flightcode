@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <ESP32Servo.h>
-#include "main/Power.h"
+#include "Power.h"
 #include "pins/escPins.h"
 #include "util/Serial.h"
 
