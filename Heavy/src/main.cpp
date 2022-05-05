@@ -10,16 +10,18 @@
 #include "util/Serial.h"
 
 void setup() {
-  initSerial();
+  Serial.begin(115200);
   initMPU();
   initPID();
   initServo();
   initESC();
+  initLora();
   srlInitFin();
 }
 
 void loop() {
   loopControl();
+  handleLora();
   // we check if control loop is ready to handle things
   if (checkReadyStatus() == true) {
     loopPower();

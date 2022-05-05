@@ -7,16 +7,6 @@ unsigned long gyroPrevMillis = 0;
 unsigned long baroPrevMillis = 0;
 unsigned long powerPrevMillis = 0;
 
-void initSerial() {
-    Serial.begin(115200);
-    // chill for two seconds so user can open serial console
-    delay(2000);
-    Serial.println("> Aether Heavy Flightcode");
-    Serial.print("> Version: ");
-    Serial.println(FLIGHTCODE_VERSION);
-    Serial.println(END_SEPERATOR);
-}
-
 void srlInitFin() {
     Serial.println("> Setup:");
     Serial.println("> Initialization Sequence complete!");

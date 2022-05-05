@@ -1,5 +1,3 @@
-void handleReceivedLora();
+void handleLora();
 void sendLora(String messageToSend);
 void initLora();
-String readLora();
-void endLora();
