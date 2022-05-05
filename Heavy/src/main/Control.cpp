@@ -10,6 +10,7 @@
 #include "util/Serial.h"
 #include "settings/pidSet.h"
 #include "settings/mpuSet.h"
+#include "settings/servoSet.h"
 
 // Servos
 Servo servoRoll1;
@@ -140,10 +141,10 @@ void loopControl(){
       // we invert values for the opposing servo because thats how our
       // TVC System works, we don't recalc PID values for each servo
       // because that saves some processing power
-      servoRoll1.write(OutputRoll);
-      servoRoll2.write(map(OutputRoll, 180, 0, 0, 180));
-      servoPitch1.write(OutputPitch);
-      servoPitch2.write(map(OutputPitch, 180, 0, 0, 180));
+      servoRoll1.write( OutputRoll - SERVO_ROLL_OFFSET );
+      servoRoll2.write( map(OutputRoll, 180, 0, 0, 180) - SERVO_ROLL_OFFSET );
+      servoPitch1.write( OutputPitch - SERVO_PITCH_OFFSET );
+      servoPitch2.write( map(OutputPitch, 180, 0, 0, 180) - SERVO_PITCH_OFFSET);
     }
   }
 }
