@@ -9,7 +9,7 @@
 
 // other vars
 String LoRaData;
-int comInt = 1000;
+int comInt = 100;
 unsigned long comPrevMillis = 0;
 
 void initLora() {
@@ -39,7 +39,10 @@ void handleLora() {
     if (packetSize) {
         while ( LoRa.available() ) {
             LoRaData = LoRa.readString();
-            srlInfo(String(LoRaData));
+            srlInfo(LoRaData);
+            if (LoRaData == "Ground Hello") {
+                sendLora("Onboard Hello");
+            }
         }
     }
 }
