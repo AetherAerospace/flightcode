@@ -17,11 +17,12 @@ void setup() {
   initESC();
   initLora();
   srlInitFin();
+  while (!checkComm());
 }
 
 void loop() {
   loopControl();
-  handleLora();
+  receiveLoRa();
   // we check if control loop is ready to handle things
   if (checkReadyStatus() == true) {
     loopPower();

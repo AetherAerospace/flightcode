@@ -7,11 +7,13 @@
 #include "util/Serial.h"
 #include "settings/loraSet.h"
 
-// other vars
 String LoRaData;
-int comInt = 100;
-unsigned long comPrevMillis = 0;
+int answerTimeout = 250;
+unsigned long now = 0;
+unsigned long startTime = 0;
+bool checkReceived = false;
 
+// initialize
 void initLora() {
     SPI.begin(SCK, MISO, MOSI, SS);
     LoRa.setPins(SS, RST, DIO0);
@@ -23,26 +25,45 @@ void initLora() {
     srlInfo("LoRa initialized!");
 }
 
-void sendLora(String messageToSend) {
-    unsigned long comMillis = millis();
-    if(comMillis - comPrevMillis > comInt) {
-        comPrevMillis = comMillis;
-        LoRa.beginPacket();
-        LoRa.print(messageToSend);
-        LoRa.endPacket();
-        srlInfo("Lora TX: " + String(messageToSend));
-    }
+// send packet
+void sendLoRa(String msg) {
+    LoRa.beginPacket();
+    LoRa.print(msg);
+    LoRa.endPacket();
 }
 
-void handleLora() {
+// initial comm check
+bool checkComm() {
+    if (!checkReceived) {
+        int packetSize = LoRa.parsePacket();
+        if (packetSize) {
+            while ( LoRa.available() ) {
+                LoRaData = LoRa.readString();
+                if (LoRaData == "Ground Hello") {
+                    checkReceived = true;
+                    startTime = millis();
+                    srlInfo("LoRa RX: Comm Check received");
+                }
+            }
+        }
+    } else {
+        now = millis();
+        if ( (now - startTime) >= answerTimeout) {
+            sendLoRa("Onboard Hello");
+            srlInfo("LoRa TX: ACK sent");
+            return true;
+        }
+    }
+    return false;
+}
+
+// operational LoRa Loop
+void receiveLoRa() {
     int packetSize = LoRa.parsePacket();
     if (packetSize) {
         while ( LoRa.available() ) {
             LoRaData = LoRa.readString();
-            srlInfo(LoRaData);
-            if (LoRaData == "Ground Hello") {
-                sendLora("Onboard Hello");
-            }
+            srlInfo("LoRa RX: " + LoRaData);
         }
     }
 }
