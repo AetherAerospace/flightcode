@@ -75,11 +75,14 @@ void toggleESCHold(){
 void killPower() {
     srlInfo("ESC-Kill received");
     if(killed == false){
+        srlInfo("Zeroing both ESC's");
         runLoop = false;
         killed = true;
         ESC1.write(0);
         ESC2.write(0);
         srlInfo("ESC1: " + String(ESC1.read()));
         srlInfo("ESC2: " + String(ESC2.read()));
+    } else {
+        srlInfo("ESC's already killed");
     }
 }

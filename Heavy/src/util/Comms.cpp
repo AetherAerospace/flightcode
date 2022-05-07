@@ -3,6 +3,7 @@
 #include <LoRa.h>
 #include <Wire.h>
 #include "Comms.h"
+#include "main/Power.h"
 #include "pins/loraPins.h"
 #include "util/Serial.h"
 #include "settings/loraSet.h"
@@ -25,6 +26,16 @@ void initLora() {
     srlInfo("LoRa initialized!");
 }
 
+// handle packets based on the code we get
+void loRaDecode(String code) {
+    // more codes to be added
+    if (code == "404") {
+        killPower();
+    } else {
+        return;
+    }
+}
+
 // send packet
 void sendLoRa(String msg) {
     LoRa.beginPacket();
@@ -38,8 +49,7 @@ bool checkComm() {
         int packetSize = LoRa.parsePacket();
         if (packetSize) {
             while ( LoRa.available() ) {
-                LoRaData = LoRa.readString();
-                if (LoRaData == "Ground Hello") {
+                if (LoRa.readString() == "Ground Hello") {
                     checkReceived = true;
                     startTime = millis();
                     srlInfo("LoRa RX: Comm Check received");
@@ -64,6 +74,7 @@ void receiveLoRa() {
         while ( LoRa.available() ) {
             LoRaData = LoRa.readString();
             srlInfo("LoRa RX: " + LoRaData);
+            loRaDecode(LoRaData);
         }
     }
 }
