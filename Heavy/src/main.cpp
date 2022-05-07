@@ -14,17 +14,16 @@ void setup() {
   initMPU();
   initPID();
   initServo();
-  initESC();
   initLora();
-  srlInitFin();
   while (!checkComm());
+  initESC();
+  srlInitFin();
 }
 
 void loop() {
   loopControl();
   receiveLoRa();
-  // we check if control loop is ready to handle things
-  if (checkReadyStatus() == true) {
+  if (motionReady()) {
     loopPower();
   } else {
     return;

@@ -1,5 +1,5 @@
 void initServo();
 void initMPU();
 void loopControl();
-bool checkReadyStatus();
+bool motionReady();
 void initPID();

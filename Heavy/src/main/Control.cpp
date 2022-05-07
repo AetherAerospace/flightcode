@@ -30,7 +30,6 @@ MPU6050 mpu;
 int sampleCount;
 bool controlReady = false;
 bool initialInit = true;
-float correct;
 bool dmpReady = false;
 uint8_t mpuIntStatus;
 uint8_t devStatus;
@@ -44,7 +43,8 @@ volatile bool mpuInterrupt = false;
 
 // PID init
 void initPID() {
-  //( kP, kI, kD, relaxMin, relaxMax, changeDir )
+  // ( kP, kI, kD, relaxMin, relaxMax, changeDir )
+  // values to be changed in the "pidSet.h" file!
   rollPID.set(PID_P, PID_I, PID_D, 
               PID_RELAX_ROLL_MIN, 
               PID_RELAX_ROLL_MAX, PID_INVERT);
@@ -99,14 +99,11 @@ void initMPU() {
 }
 
 // status check
-bool checkReadyStatus() {
-  if (controlReady == true) {
-    // put more checks here if necessary
-    // this arms the ESC power loop, so things get dangerous!
-    return true;
-  } else {
-    return false;
-  }
+bool motionReady() {
+  // once controlReady is true,
+  // main can start/initiate power
+  // (aka things get dangerous)
+  return controlReady;
 }
 
 //main control loop
@@ -116,35 +113,28 @@ void loopControl(){
     return;
   }
   if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) {
+    // assume control loop is ready to operate
+    controlReady = true;
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-    if (initialInit) srlInfo("Collecting Yaw Samples...");
-    initialInit = false;
-    if (sampleCount <= 300) {
-      correct = ypr[0];
-      sampleCount++;
-    } else {
-      // assume control loop is ready to operate
-      controlReady = true;
-      // raw  degree data
-      double rawPitch = (ypr[1] * 180/M_PI);
-      double rawRoll = (ypr[2] * 180/M_PI);
-      // convert into servo readable value
-      // these are the vals which are passed to the PID-Loops
-      InputPitch = map(rawPitch, -180.00, 180.00, 0.00, 180.00);
-      InputRoll = map(rawRoll, -180.00, 180.00, 0.00, 180.00);
-      // compute PID values based on servo vals
-      rollPID.computePID();
-      pitchPID.computePID();
-      srlGyro(String(OutputRoll), String(OutputPitch));
-      // we invert values for the opposing servo because thats how our
-      // TVC System works, we don't recalc PID values for each servo
-      // because that saves some processing power
-      servoRoll1.write( OutputRoll - SERVO_ROLL_OFFSET );
-      servoRoll2.write( map(OutputRoll, 180, 0, 0, 180) - SERVO_ROLL_OFFSET );
-      servoPitch1.write( OutputPitch - SERVO_PITCH_OFFSET );
-      servoPitch2.write( map(OutputPitch, 180, 0, 0, 180) - SERVO_PITCH_OFFSET);
-    }
+    // raw  degree data
+    double rawPitch = (ypr[1] * 180/M_PI);
+    double rawRoll = (ypr[2] * 180/M_PI);
+    // convert into servo readable value
+    // these are the vals which are passed to the PID-Loops
+    InputPitch = map(rawPitch, -180.00, 180.00, 0.00, 180.00);
+    InputRoll = map(rawRoll, -180.00, 180.00, 0.00, 180.00);
+    // compute PID values based on servo vals
+    rollPID.computePID();
+    pitchPID.computePID();
+    srlGyro(String(OutputRoll), String(OutputPitch));
+    // we invert values for the opposing servo because thats how our
+    // TVC System works, we don't recalc PID values for each servo
+    // because that saves some processing power
+    servoRoll1.write( OutputRoll - SERVO_ROLL_OFFSET );
+    servoRoll2.write( map(OutputRoll, 180, 0, 0, 180) - SERVO_ROLL_OFFSET );
+    servoPitch1.write( OutputPitch - SERVO_PITCH_OFFSET );
+    servoPitch2.write( map(OutputPitch, 180, 0, 0, 180) - SERVO_PITCH_OFFSET);
   }
 }

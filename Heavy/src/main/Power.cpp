@@ -24,7 +24,6 @@ float value = 0;
 void initESC() {
     ESC1.attach(ESC_PIN_1, 1000, 2000);
     ESC2.attach(ESC_PIN_2, 1000, 2000);
-    srlInfo("ESC's initialized!");
     // give 2 seconds for initial powerup before we send any signals
     delay(2000);
     // make sure we set both ESC's to zero
@@ -32,6 +31,7 @@ void initESC() {
     ESC2.write(0);
     // again wait 2 seconds after first signal send just to be sure
     delay(2000);
+    srlInfo("ESC's initialized!");
 }
 
 /* 
@@ -73,12 +73,13 @@ void toggleESCHold(){
 
 // terminate ESCs
 void killPower() {
+    srlInfo("ESC-Kill received");
     if(killed == false){
         runLoop = false;
+        killed = true;
         ESC1.write(0);
         ESC2.write(0);
-        srlPower(String(ESC1.read()));
-        srlPower(String(ESC2.read()));
-        killed = true;
+        srlInfo("ESC1: " + String(ESC1.read()));
+        srlInfo("ESC2: " + String(ESC2.read()));
     }
 }
