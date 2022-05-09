@@ -86,3 +86,24 @@ void killPower() {
         srlInfo("ESC's already killed");
     }
 }
+
+// calibrate ESCs
+void initESCCalibrate() {
+    // attach and write min max with delay
+    // standard calibrating procedure
+    ESC1.attach(ESC_PIN_1, 1000, 2000);
+    ESC2.attach(ESC_PIN_2, 1000, 2000);
+    srlInfo("ESC CALIBRATION");
+    srlInfo("Waiting 4 Seconds...");
+    delay(4000);
+    ESC1.write(180);
+    ESC2.write(180);
+    srlInfo("Throttle MAX");
+    delay(4000);
+    ESC1.write(180);
+    ESC2.write(180);
+    srlInfo("Throttle MIN");
+    delay(4000);
+    srlInfo("Calibration done, please reboot!");
+    while (1) delay(10);
+}

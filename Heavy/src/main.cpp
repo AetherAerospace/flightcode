@@ -16,7 +16,9 @@ void setup() {
   initServo();
   initLora();
   while (!checkComm());
+  // if we need to recalibrate, swap
   initESC();
+  //initESCCalibrate();
   srlInitFin();
 }
 
