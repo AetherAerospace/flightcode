@@ -99,9 +99,9 @@ void initESCCalibrate() {
     ESC1.write(180);
     ESC2.write(180);
     srlInfo("Throttle MAX");
-    delay(4000);
-    ESC1.write(180);
-    ESC2.write(180);
+    delay(8000);
+    ESC1.write(0);
+    ESC2.write(0);
     srlInfo("Throttle MIN");
     delay(4000);
     srlInfo("Calibration done, please reboot!");
