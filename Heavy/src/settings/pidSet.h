@@ -3,9 +3,9 @@
 #define PID_INVERT false
 
 // main pid vals
-#define PID_P 1.1
-#define PID_I 0.0
-#define PID_D 0.0
+#define PID_P 0.7
+#define PID_I 0.1
+#define PID_D 0.05
 
 /*
     relax is used for limiting PID-Output, 
