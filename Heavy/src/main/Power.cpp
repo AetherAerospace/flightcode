@@ -46,9 +46,9 @@ void loopPower() {
         if(currentMillis - previousMillis > interval) {
             previousMillis = currentMillis;
             if(holdEngine == false){
-                if (value > 180 && once == true) {
+                if (value > 70 && once == true) {
                     once = false;
-                    modifier = -0.5;
+                    modifier = 0;
                 }
                 if (value < 0 && once == false) {
                     modifier = 0;
