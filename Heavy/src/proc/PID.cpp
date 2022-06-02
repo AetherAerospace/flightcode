@@ -12,7 +12,7 @@ PID::PID(double* Input, double* Output, double* Setpoint) {
     pidSetpoint = Setpoint;
     outputSum = *pidOutput;
     lastInput = *pidInput;
-    sampleTime = 10;
+    sampleTime = 4;
     lastTime = millis() - sampleTime;
 }
 
