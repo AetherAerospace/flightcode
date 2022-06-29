@@ -43,14 +43,14 @@ volatile bool mpuInterrupt = false;
 
 // PID init
 void initPID() {
-  // ( kP, kI, kD, relaxMin, relaxMax, changeDir )
+  // ( kP, kI, kD, relaxMin, relaxMax )
   // values to be changed in the "pidSet.h" file!
   rollPID.set(PID_P, PID_I, PID_D, 
               PID_RELAX_ROLL_MIN, 
-              PID_RELAX_ROLL_MAX, PID_INVERT);
+              PID_RELAX_ROLL_MAX);
   pitchPID.set( PID_P, PID_I, PID_D, 
                 PID_RELAX_PITCH_MIN, 
-                PID_RELAX_PITCH_MAX, PID_INVERT);
+                PID_RELAX_PITCH_MAX);
   srlInfo("PID initialized!");
 }
 

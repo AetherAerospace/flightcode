@@ -1,6 +1,5 @@
 // base pid settings
 #define PID_SETPOINT 90
-#define PID_INVERT false
 
 /*
     Main PID-Vals

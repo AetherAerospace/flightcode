@@ -12,25 +12,25 @@ PID::PID(double* Input, double* Output, double* Setpoint) {
     pidSetpoint = Setpoint;
     outputSum = *pidOutput;
     lastInput = *pidInput;
-    sampleTime = 4;
+    sampleTime = 2;
+    isRelaxed = false;
     lastTime = millis() - sampleTime;
 }
 
-void PID::set(double SkP, double SkI, double SkD, double SrelaxMin, double SrelaxMax, bool dirChange)
-{
-   if (SkP<0 || SkI<0 || SkD<0) return;
-   double sampleTimeInSec = (double)sampleTime/1000;
-   isReversed = dirChange;
-   kP = SkP;
-   kI = SkI * sampleTimeInSec;
-   kD = SkD / sampleTimeInSec;
-   if ( SrelaxMin != 0 && SrelaxMin != 0 ) {
-       isRelaxed = true;
-       relaxMin = SrelaxMin;
-       relaxMax = SrelaxMax;
-   } else {
-       isRelaxed = false;
-   }
+void PID::set(double SkP, double SkI, double SkD, double SrelaxMin, double SrelaxMax) {
+    if (SkP<0 || 
+       SkI<0 || 
+       SkD<0)
+    return;
+    double sampleTimeInSec = (double)sampleTime/1000;
+    kP = SkP;
+    kI = SkI * sampleTimeInSec;
+    kD = SkD / sampleTimeInSec;
+    if ( SrelaxMin != 0 && SrelaxMin != 0 ) {
+        isRelaxed = true;
+        relaxMin = SrelaxMin;
+        relaxMax = SrelaxMax;
+    }
 }
 
 bool PID::computePID() {
@@ -44,19 +44,18 @@ bool PID::computePID() {
         outputSum += (kI * error);
         output = (kP * error);
         output += outputSum - (kD * diffInput);
-        if (isRelaxed) {
-            if ( (output + *pidSetpoint) > relaxMax) {
-                *pidOutput = relaxMax;
-            } else if ( (output + *pidSetpoint) < relaxMin) {
-                *pidOutput = relaxMin;
-            } else {
-                *pidOutput = output + *pidSetpoint;
-            }
+        if ( 
+            isRelaxed && 
+            (output + *pidSetpoint) > relaxMax
+            ) {
+            *pidOutput = relaxMax;
+        } else if ( 
+            isRelaxed &&
+            (output + *pidSetpoint) < relaxMin 
+            ) {
+            *pidOutput = relaxMin;
         } else {
             *pidOutput = output + *pidSetpoint;
-        }
-        if (isReversed) {
-            *pidOutput = *pidOutput*(-1);
         }
         lastInput = input;
         lastTime = now;

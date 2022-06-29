@@ -1,2 +1,2 @@
 // version
-#define FLIGHTCODE_VERSION "0.1.5"
+#define FLIGHTCODE_VERSION "1.0.0"
