@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include <ESP32Servo.h>
 #include <Wire.h>
-#include <MPU6050_6Axis_MotionApps20.h>
 #include "Control.h"
+#include "proc/MPU.h"
 #include "proc/PID.h"
 #include "util/Comms.h"
 #include "util/Serial.h"

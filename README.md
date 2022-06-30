@@ -7,15 +7,10 @@
 
 # VERSION #
 
-1.0.0
+1.0.1-FP
 
 # FEATURES #
 
 - Fast PID-Controller
 - LoRa Communication
 - Serial Logging
-- SD Logging
-
-# LAST FLIGHT PROVEN MODEL #
-
-AAE Model Heavy
