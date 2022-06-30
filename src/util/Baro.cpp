@@ -2,7 +2,6 @@
 #include <Wire.h>
 #include <Adafruit_BMP280.h>
 #include "Baro.h"
-#include "util/Logs.h"
 #include "util/Serial.h"
 
 Adafruit_BMP280 bmp;
@@ -41,11 +40,8 @@ void loopApogee(){
     unsigned long bmpMillis = millis();
     if(bmpMillis - bmpPrevMillis > bmpInt){
         currentHeight = getHeight();
-        writeLog("Current Height: " + String(currentHeight));
-        writeLog("Current Apogee: " + String(maxHeight));
         if(currentHeight > maxHeight){
             maxHeight = currentHeight;
-            writeLog("New Apogee: " + String(maxHeight));
         }
     }
 }

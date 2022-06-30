@@ -18,10 +18,7 @@ PID::PID(double* Input, double* Output, double* Setpoint) {
 }
 
 void PID::set(double SkP, double SkI, double SkD, double SrelaxMin, double SrelaxMax) {
-    if (SkP<0 || 
-       SkI<0 || 
-       SkD<0)
-    return;
+    if (SkP<0 || SkI<0 || SkD<0) return;
     double sampleTimeInSec = (double)sampleTime/1000;
     kP = SkP;
     kI = SkI * sampleTimeInSec;
@@ -33,7 +30,7 @@ void PID::set(double SkP, double SkI, double SkD, double SrelaxMin, double Srela
     }
 }
 
-bool PID::computePID() {
+void PID::computePID() {
     unsigned long now = millis();
     unsigned long timeChange = (now - lastTime);
     if (timeChange >= sampleTime) {
@@ -59,7 +56,6 @@ bool PID::computePID() {
         }
         lastInput = input;
         lastTime = now;
-        return true;
     }
-    else return false;
+    else return;
 }

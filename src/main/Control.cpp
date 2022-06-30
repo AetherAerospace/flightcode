@@ -5,12 +5,11 @@
 #include "Control.h"
 #include "proc/PID.h"
 #include "util/Comms.h"
-#include "util/Logs.h"
-#include "pins/servoPins.h"
 #include "util/Serial.h"
 #include "settings/pidSet.h"
 #include "settings/mpuSet.h"
 #include "settings/servoSet.h"
+#include "pins/servoPins.h"
 
 // Servos
 Servo servoRoll1;
@@ -102,11 +101,10 @@ void initMPU() {
 bool motionReady() {
   // once controlReady is true,
   // main can start/initiate power
-  // (aka things get dangerous)
   return controlReady;
 }
 
-//main control loop
+// main control loop
 void loopControl(){
   if (!dmpReady) {
     controlReady = false;
@@ -115,6 +113,7 @@ void loopControl(){
   if (mpu.dmpGetCurrentFIFOPacket(fifoBuffer)) {
     // assume control loop is ready to operate
     controlReady = true;
+    // do mpu magic
     mpu.dmpGetQuaternion(&q, fifoBuffer);
     mpu.dmpGetGravity(&gravity, &q);
     mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
@@ -128,7 +127,11 @@ void loopControl(){
     // compute PID values based on servo vals
     rollPID.computePID();
     pitchPID.computePID();
-    srlGyro(String(OutputRoll), String(OutputPitch));
+    // logging
+    // disabled for more performance
+    #ifdef GYRO_LOG_INTERVAL
+      srlGyro(String(OutputRoll), String(OutputPitch));
+    #endif
     // we invert values for the opposing servo because thats how our
     // TVC System works, we don't recalc PID values for each servo
     // because that saves some processing power

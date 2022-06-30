@@ -6,8 +6,8 @@
 class PID {
     public:
         PID(double*, double*, double*);
-        bool computePID();
         void set(double SkP, double SkI, double SkD, double SrelaxMin, double SrelaxMax);
+        void computePID();
     private:
         double kP, kI, kD;
         double *pidOutput, *pidInput, *pidSetpoint;

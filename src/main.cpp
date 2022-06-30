@@ -2,32 +2,41 @@
 #include <SPI.h>
 #include <LoRa.h>
 #include <Wire.h>
-#include "main/Baro.h"
 #include "main/Control.h"
 #include "main/Power.h"
+#include "util/Baro.h"
 #include "util/Comms.h"
-#include "util/Logs.h"
 #include "util/Serial.h"
 
 void setup() {
   Serial.begin(115200);
+
+  // base functions init
   initMPU();
   initPID();
   initServo();
+
+  // comm init
   initLora();
   while (!checkComm());
+  
   // if we need to recalibrate, swap
   initESC();
   //initESCCalibrate();
+  
   srlInitFin();
+  
+  // last motion ready check
+  while (!motionReady());
 }
 
 void loop() {
+  // rocket stabilization functions
   loopControl();
+
+  // communication functions
   receiveLoRa();
-  if (motionReady()) {
-    loopPower();
-  } else {
-    return;
-  }
+
+  // propulsion functions
+  loopPower();
 }
