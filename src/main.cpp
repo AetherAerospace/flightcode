@@ -9,6 +9,10 @@
 #include "util/Serial.h"
 
 void setup() {
+  // force fastest speed
+  setCpuFrequencyMhz(240);
+
+  // start serial out
   Serial.begin(115200);
 
   // base functions init
